@@ -1,0 +1,9 @@
+{
+    "editor.foldingMaximumRegions": 10000,
+    "editor.wordWrap": "on",
+    "editor.mouseWheelZoom": true,
+    "dart.flutterSdkPath": "C:\\src\\flutter",
+    "dart.lineLength": 100000,
+    "dart.maxLogLineLength": 100000,
+    "dart.renameFilesWithClasses": "prompt"
+}
