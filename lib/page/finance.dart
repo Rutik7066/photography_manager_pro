@@ -45,12 +45,12 @@ class _FinanceState extends State<Finance> {
       body: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Padding(
-            padding: const EdgeInsets.all(8.0),
-            child: Row(
-              children: [Text('Expenses', style: style.textTheme.headline5)],
-            ),
-          ),
+          // Padding(
+          //   padding: const EdgeInsets.all(8.0),
+          //   child: Row(
+          //     children: [Text('Expenses', style: style.textTheme.headline5)],
+          //   ),
+          // ),
           Padding(
             padding: const EdgeInsets.symmetric(vertical: 10),
             child: Row(

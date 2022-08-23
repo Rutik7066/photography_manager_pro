@@ -14,7 +14,7 @@ import 'package:jk_photography_manager/provider/customer_provider.dart';
 import 'package:provider/provider.dart';
 import 'package:widget_to_image/widget_to_image.dart';
 
-import 'my_textfield.dart';
+import 'my_textfield.dart';      
 import 'widget_to_image/bill_to_image.dart';
 
 class EventInfo extends StatefulWidget {

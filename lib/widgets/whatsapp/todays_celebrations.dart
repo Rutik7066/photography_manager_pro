@@ -1,3 +1,5 @@
+import 'dart:ffi';
+
 import 'package:data_table_2/data_table_2.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_vector_icons/flutter_vector_icons.dart';
@@ -8,6 +10,7 @@ import 'package:jk_photography_manager/model/m_event.dart';
 import 'package:jk_photography_manager/whatsapp_services/whatsapp_function.dart';
 import 'package:jk_photography_manager/whatsapp_services/whatsapp_provider.dart';
 import 'package:provider/provider.dart';
+import 'package:win32/win32.dart';
 
 class TodaysCelebrations extends StatelessWidget {
   const TodaysCelebrations({Key? key}) : super(key: key);
@@ -65,7 +68,7 @@ class TodaysCelebrations extends StatelessWidget {
                       DataCell(Text(cele.name!)),
                       DataCell(
                         MyIconButton(
-                          onPressed: () async {
+                          onPressed: () {
                             String message = '';
                             try {
                               if (cele.name == 'Birthday') {
@@ -73,7 +76,7 @@ class TodaysCelebrations extends StatelessWidget {
                               } else if (cele.name == 'Wedding') {
                                 message = 'Happy Marriage anniversary ${cust.nickname} 🎉✨🎊';
                               }
-                              await WhatsappFunction.createMessage(number: cust.number.toString(), message: message);
+                              WhatsappFunction().createMessage(number: cust.number.toString(), message: message);
                             } catch (e) {}
                           },
                           iconData: FontAwesome.send,

@@ -1,6 +1,8 @@
 // ignore_for_file: public_member_api_docs, sort_constructors_first
 // ignore_for_file: sized_box_for_whitespace, prefer_const_constructors, prefer_const_literals_to_create_immutables
 
+import 'dart:ffi';
+
 import 'package:data_table_2/data_table_2.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_vector_icons/flutter_vector_icons.dart';
@@ -13,7 +15,7 @@ import 'package:provider/provider.dart';
 
 import 'package:jk_photography_manager/model/m_customer.dart';
 import 'package:jk_photography_manager/provider/customer_provider.dart';
-
+import 'package:win32/win32.dart';
 
 import '../layout/navigation.dart';
 
@@ -39,20 +41,20 @@ class _CustomerState extends State<Customer> {
     return Scaffold(
       body: Column(
         children: [
-          Padding(
-            padding: const EdgeInsets.all(8),
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.start,
-              mainAxisSize: MainAxisSize.max,
-              children: [
-                Text(
-                  'Customer',
-                  style: style.textTheme.headline5,
-                ),
-                Spacer(),
-              ],
-            ),
-          ),
+          // Padding(
+          //   padding: const EdgeInsets.all(8),
+          //   child: Row(
+          //     mainAxisAlignment: MainAxisAlignment.start,
+          //     mainAxisSize: MainAxisSize.max,
+          //     children: [
+          //       Text(
+          //         'Customer',
+          //         style: style.textTheme.headline5,
+          //       ),
+          //       Spacer(),
+          //     ],
+          //   ),
+          // ),
           Row(
             mainAxisAlignment: MainAxisAlignment.end,
             children: [
@@ -65,7 +67,8 @@ class _CustomerState extends State<Customer> {
                     controller: _textSearchController,
                     onChanged: (String text) {
                       customerProvider.searchCustomer(text);
-                    }, hintText: 'Customer Name',
+                    },
+                    hintText: 'Customer Name',
                   ),
                 ),
               ),
@@ -77,7 +80,10 @@ class _CustomerState extends State<Customer> {
                       onPressed: () {
                         navigation.routeAdd(CustomerAdd());
                       },
-                      icon: Icon(MaterialIcons.person_add_alt_1,size: 20,),
+                      icon: Icon(
+                        MaterialIcons.person_add_alt_1,
+                        size: 20,
+                      ),
                       label: Text(
                         'New Cutomer',
                       )),
@@ -119,10 +125,10 @@ class _CustomerState extends State<Customer> {
                           MyIconButton(
                             iconData: FontAwesome.send,
                             iconSize: 13,
-                            onPressed: () async {
-                              String message =
-                                  'Hi ${customer.nickname}.\nWe are here to inform you that\nyour payment of \u20A8 ${customer.totalRecoveryAmount} is still pending. Kindly pay as soon as possible.\nTo get more information about this kindly visit the studio.';
-                              await WhatsappFunction.createMessage(number: customer.number.toString(), message: message);
+                            onPressed: () {
+                              String message = 'Hi ${customer.nickname}.\nWe are here to inform you that\nyour payment of \u20A8 ${customer.totalRecoveryAmount} is still pending. Kindly pay as soon as possible.\nTo get more information about this kindly visit the studio.';
+
+                              WhatsappFunction().createMessage(number: customer.number.toString(), message: message.toString());
                             },
                           ),
                         ),

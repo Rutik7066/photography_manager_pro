@@ -1,4 +1,5 @@
 import 'dart:ffi';
+import 'dart:io';
 import 'package:ffi/ffi.dart';
 import 'package:data_table_2/data_table_2.dart';
 import 'package:dropdown_button2/dropdown_button2.dart';
@@ -11,6 +12,7 @@ import 'package:jk_photography_manager/common_widgets/bill_info.dart';
 import 'package:jk_photography_manager/common_widgets/event_info.dart';
 import 'package:jk_photography_manager/common_widgets/my_textfield.dart';
 import 'package:jk_photography_manager/common_widgets/new_customer.dart';
+import 'package:jk_photography_manager/common_widgets/widget_to_image/bill_to_image.dart';
 import 'package:jk_photography_manager/controller/quick_bill.dart';
 import 'package:jk_photography_manager/model/daily/m_datatable_row.dart';
 import 'package:jk_photography_manager/model/daily/m_expense.dart';
@@ -309,59 +311,37 @@ class _TodayState extends State<Today> {
                             ),
                           ),
                           Padding(
-                            padding: const EdgeInsets.all(8.0),
+                            padding: const EdgeInsets.all(3.0),
                             child: SizedBox(
                               height: 30,
-                              width: 100,
-                              child: OutlinedButton.icon(
-                                onPressed: () async {
-                                  quickbill.selectedCustomerName = _customerController.text;
-                                  quickbill.selectedCustomerNumber = _numberController.text;
-                                  var r = await quickbill.addbill();
-                                  if (r == true) {
-                                    today.init();
-                                    _customerController.clear();
-                                    _productController.clear();
-                                    _qtyController.clear();
-                                    _disController.clear();
-                                    _payController.clear();
-                                    _numberController.clear();
-                                    quickbill.clear();
-                                    customerprovider.resetBills();
-                                    setState(() {
-                                      isEnabled = true;
-                                    });
-                                  } else {
-                                    final bar = SnackBar(
-                                      behavior: SnackBarBehavior.floating,
-                                      width: MediaQuery.of(context).size.height - 40,
-                                      backgroundColor: style.errorColor,
-                                      duration: const Duration(seconds: 5),
-                                      content: Text(
-                                        'Something went wrong. Kindly fill all information correctly',
-                                        style: TextStyle(
-                                          color: Colors.white,
-                                          fontSize: style.textTheme.bodyLarge!.fontSize ?? 14,
-                                          fontWeight: style.textTheme.bodyLarge!.fontWeight,
-                                        ),
-                                      ),
-                                      action: SnackBarAction(label: 'Ok', textColor: Colors.white, onPressed: () {}),
-                                    );
-                                    ScaffoldMessenger.of(context).showSnackBar(bar);
-                                  }
-                                },
-                                icon: const Icon(
-                                  MaterialIcons.add,
-                                  size: 20,
-                                ),
-                                label: const Text(
-                                  'Add',
-                                ),
-                              ),
+                              child: ElevatedButton(
+                                  onPressed: () {
+                                    String number = _numberController.text;
+                                    String customer = _customerController.text;
+                                    addToQuickBill(quickbill: quickbill, today: today, customerprovider: customerprovider, style: style);
+                                    String message = "Dear $customer,\nThank You so much for visiting ${user.userBussinessName}.\nWe are happy to have you.";
+                                    WhatsappFunction().createMessage(number: number, message: message);
+                                  },
+                                  child: Text('Add')),
                             ),
                           ),
                         ],
                       ),
+                      // Row(
+                      //   mainAxisAlignment: MainAxisAlignment.end,
+                      //   children: [
+                      //
+                      //     Padding(
+                      //       padding: const EdgeInsets.all(3.0),
+                      //       child: SizedBox(
+                      //         height: 30,
+                      //         child: ElevatedButton(onPressed: () {
+                      //           //
+                      //         }, child: Text('Share')),
+                      //       ),
+                      //     )
+                      //   ],
+                      // )
                     ],
                   ),
                 ),
@@ -432,5 +412,42 @@ class _TodayState extends State<Today> {
         ],
       ),
     );
+  }
+
+  addToQuickBill({quickbill, today, customerprovider, style}) async {
+    quickbill.selectedCustomerName = _customerController.text;
+    quickbill.selectedCustomerNumber = _numberController.text;
+    var r = await quickbill.addbill();
+    if (r == true) {
+      today.init();
+      _customerController.clear();
+      _productController.clear();
+      _qtyController.clear();
+      _disController.clear();
+      _payController.clear();
+      _numberController.clear();
+      quickbill.clear();
+      customerprovider.resetBills();
+      setState(() {
+        isEnabled = true;
+      });
+    } else {
+      final bar = SnackBar(
+        behavior: SnackBarBehavior.floating,
+        width: MediaQuery.of(context).size.height - 40,
+        backgroundColor: style.errorColor,
+        duration: const Duration(seconds: 5),
+        content: Text(
+          'Something went wrong. Kindly fill all information correctly',
+          style: TextStyle(
+            color: Colors.white,
+            fontSize: style.textTheme.bodyLarge!.fontSize ?? 14,
+            fontWeight: style.textTheme.bodyLarge!.fontWeight,
+          ),
+        ),
+        action: SnackBarAction(label: 'Ok', textColor: Colors.white, onPressed: () {}),
+      );
+      ScaffoldMessenger.of(context).showSnackBar(bar);
+    }
   }
 }

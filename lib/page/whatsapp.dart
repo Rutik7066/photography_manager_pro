@@ -15,19 +15,19 @@ class Whatsapp extends StatelessWidget {
         body: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Padding(
-              padding: const EdgeInsets.all(8),
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.start,
-                mainAxisSize: MainAxisSize.max,
-                children: [
-                  Text(
-                    'Whatsapp',
-                    style: style.textTheme.headline5,
-                  ),
-                ],
-              ),
-            ),
+            // Padding(
+            //   padding: const EdgeInsets.all(8),
+            //   child: Row(
+            //     mainAxisAlignment: MainAxisAlignment.start,
+            //     mainAxisSize: MainAxisSize.max,
+            //     children: [
+            //       Text(
+            //         'Whatsapp',
+            //         style: style.textTheme.headline5,
+            //       ),
+            //     ],
+            //   ),
+            // ),
             SizedBox(
               width: 750,
               child: TabBar(

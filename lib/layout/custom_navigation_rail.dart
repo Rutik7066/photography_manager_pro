@@ -37,9 +37,10 @@ class _CustomNavigationRailState extends State<CustomNavigationRail> {
             onTap: () {
               navigation.select(0);
             },
-            active: navigation.selectedIndex == 0,
+            active: navigation.selectedIndex == 0, name: 'Home',
           ),
           NavBarItem(
+            name: 'Event',
             icon: Icons.edit_calendar_outlined,
             onTap: () {
               navigation.select(1);
@@ -47,6 +48,7 @@ class _CustomNavigationRailState extends State<CustomNavigationRail> {
             active: navigation.selectedIndex == 1,
           ),
           NavBarItem(
+            name: 'Bill',
             icon: Ionicons.md_receipt_outline,
             onTap: () {
               navigation.select(2);
@@ -54,6 +56,7 @@ class _CustomNavigationRailState extends State<CustomNavigationRail> {
             active: navigation.selectedIndex == 2,
           ),
           NavBarItem(
+            name: 'Expense',
             icon: Icons.currency_rupee,
             onTap: () {
               navigation.select(3);
@@ -61,6 +64,7 @@ class _CustomNavigationRailState extends State<CustomNavigationRail> {
             active: navigation.selectedIndex == 3,
           ),
           NavBarItem(
+            name: 'Customer',
             icon: Ionicons.person_outline,
             onTap: () {
               navigation.select(4);
@@ -68,19 +72,28 @@ class _CustomNavigationRailState extends State<CustomNavigationRail> {
             active: navigation.selectedIndex == 4,
           ),
           NavBarItem(
+            name: 'Whatsapp',
             icon: Icons.whatsapp,
             onTap: () {
               navigation.select(5);
             },
             active: navigation.selectedIndex == 5,
-          ),
-          Spacer(),
-          NavBarItem(
-            icon: SimpleLineIcons.settings,
+          ), NavBarItem(
+            name: 'Quotation',
+            icon: AntDesign.book,
             onTap: () {
               navigation.select(6);
             },
             active: navigation.selectedIndex == 6,
+          ),
+          Spacer(),
+          NavBarItem(
+            name: 'Setting',
+            icon: SimpleLineIcons.settings,
+            onTap: () {
+              navigation.select(7);
+            },
+            active: navigation.selectedIndex == 7,
           ),
         ],
       ),

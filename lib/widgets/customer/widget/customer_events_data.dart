@@ -30,7 +30,7 @@ class _CustomerEventsDataState extends State<CustomerEventsData> {
         DataColumn2(label: Text('Date')),
         DataColumn2(label: Text('Final')),
         DataColumn2(label: Text('Unpaid')),
-        DataColumn2(label: Text('Delivered')),
+        DataColumn2(label: Text('Status')),
       ],
       rows: List.generate(
         events.length,

@@ -356,7 +356,7 @@ class _BillToImageState extends State<BillToImage> {
               onPressed: () async {
                 String? path = Directory.systemTemp.absolute.path;
                 if (path != null) {
-                  ByteData imagebyte = await WidgetToImage.repaintBoundaryToImage(_imageKey, pixelRatio: 3);
+                  ByteData imagebyte = await WidgetToImage.repaintBoundaryToImage(_imageKey,);
                   Uint8List imageint = imagebyte.buffer.asUint8List();
                   Printer? printer = await Printing.pickPrinter(context: context);
                   if (printer != null) {
@@ -368,7 +368,7 @@ class _BillToImageState extends State<BillToImage> {
               },
               icon: const Icon(MaterialIcons.print, size: 20),
               label: const Text(
-                'Print',
+                'Print'
               ),
             ),
           ),
@@ -381,7 +381,7 @@ class _BillToImageState extends State<BillToImage> {
               onPressed: () async {
                 String? path = await FilePicker.platform.getDirectoryPath();
                 if (path != null) {
-                  ByteData imagebyte = await WidgetToImage.repaintBoundaryToImage(_imageKey, pixelRatio: 2);
+                  ByteData imagebyte = await WidgetToImage.repaintBoundaryToImage(_imageKey,pixelRatio : 5);
                   Uint8List imageint = imagebyte.buffer.asUint8List();
                   File image = File("${path}/${widget.bill.customername} ${widget.bill.finalTotal}.png");
                   await image.writeAsBytes(imageint);
@@ -392,7 +392,7 @@ class _BillToImageState extends State<BillToImage> {
               },
               icon: const Icon(Ionicons.download_outline, size: 20),
               label: const Text(
-                'Download',
+                'Download'
               ),
             ),
           ),
@@ -406,7 +406,7 @@ class _BillToImageState extends State<BillToImage> {
                 Navigator.pop(context);
               },
               child: const Text(
-                'Close',
+                'Close'
               ),
             ),
           ),

@@ -32,6 +32,8 @@ import 'package:url_launcher/url_launcher_string.dart';
 import 'package:widget_to_image/widget_to_image.dart';
 import 'package:win32/win32.dart';
 
+import '../../whatsapp_services/whatsapp_function.dart';
+
 class NewEvent extends StatefulWidget {
   const NewEvent({Key? key}) : super(key: key);
 
@@ -592,6 +594,8 @@ class _NewEventState extends State<NewEvent> {
                             pr: _pr!,
                             time: _time!,
                           );
+                          String number = _selectedCustomer!.number!;
+                          String customer = _selectedCustomer!.name!;
                           customerprovider.resetEvents();
                           _eventdesController.clear();
                           _disController.clear();
@@ -603,7 +607,9 @@ class _NewEventState extends State<NewEvent> {
                           neweventcontroller.reset();
                           _selectedDate = '';
                           _selectedTime = '';
-                          _selectedCustomer = null;
+                          _selectedCustomer = null;      String message = "Dear $customer,\nThank You so much for visiting ${user.userBussinessName}.\nWe are happy to have you.";
+                          WhatsappFunction().createMessage(number: number, message: message);
+                      
                         } else {
                           final bar = SnackBar(
                             behavior: SnackBarBehavior.floating,
@@ -657,7 +663,8 @@ class _NewEventState extends State<NewEvent> {
                             paymentmode: _dropdowninitvalue,
                             pr: _pr!,
                             time: _time!,
-                          );
+                          );            String number = _selectedCustomer!.number!;
+                          String customer = _selectedCustomer!.name!;
                           customerprovider.resetEvents();
                           _eventdesController.clear();
                           _disController.clear();
@@ -670,6 +677,8 @@ class _NewEventState extends State<NewEvent> {
                           _selectedDate = '';
                           _selectedTime = '';
                           _selectedCustomer = null;
+                              String message = "Dear $customer,\nThank You so much for visiting ${user.userBussinessName}.\nWe are happy to have you.";
+                          WhatsappFunction().createMessage(number: number, message: message);
                         } else {
                           final bar = SnackBar(
                             behavior: SnackBarBehavior.floating,

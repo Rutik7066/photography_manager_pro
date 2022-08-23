@@ -41,6 +41,7 @@ void main() async {
   await Hive.openBox<MBusiness>('BusinessBox');
   await Hive.openBox<MCustomer>('CustomerBox');
   await Hive.openBox('FinanceBox');
+  await Hive.openBox('QuotationBox');
   await Hive.openBox('knfgirn');
   await Hive.openBox<MProduct>('ProductBox');
   await Hive.openBox('msgtemp');

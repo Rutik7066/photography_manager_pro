@@ -17,14 +17,14 @@ class Bill extends StatelessWidget {
           crossAxisAlignment: CrossAxisAlignment.start,
 
             children: [
-              Row(
-                children: [
-                  Text(
-                    'Bill',
-                    style: style.textTheme.headline5,
-                  )
-                ],
-              ),
+              // Row(
+              //   children: [
+              //     Text(
+              //       'Bill',
+              //       style: style.textTheme.headline5,
+              //     )
+              //   ],
+              // ),
               SizedBox(
                 width: 500,
                 child: TabBar(

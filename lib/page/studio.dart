@@ -22,17 +22,17 @@ class _StudioState extends State<Studio> {
         body: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children:  [
-            Padding(
-              padding: const EdgeInsets.all(8.0),
-              child: Row(
-                  children: [
-                    Text(
-                      'Home',
-                      style: style.textTheme.headline5,
-                    )
-                  ],
-                ),
-            ),
+            // Padding(
+            //   padding: const EdgeInsets.all(8.0),
+            //   child: Row(
+            //       children: [
+            //         Text(
+            //           'Home',
+            //           style: style.textTheme.headline5,
+            //         )
+            //       ],
+            //     ),
+            // ),
             SizedBox(
               width: 500,
               child: TabBar(

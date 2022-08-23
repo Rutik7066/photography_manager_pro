@@ -5,6 +5,7 @@ import 'package:jk_photography_manager/page/bill.dart';
 import 'package:jk_photography_manager/page/customer.dart';
 import 'package:jk_photography_manager/page/event.dart';
 import 'package:jk_photography_manager/page/finance.dart';
+import 'package:jk_photography_manager/page/quotation%20.dart';
 import 'package:jk_photography_manager/page/setting.dart';
 import 'package:jk_photography_manager/page/studio.dart';
 import 'package:jk_photography_manager/page/whatsapp.dart';
@@ -49,7 +50,12 @@ class Navigation extends ChangeNotifier {
           _selectedWidget = const Whatsapp();
         }
         break;
-      case 6:
+         case 6:
+        {
+          _selectedWidget = const Quotation();
+        }
+        break;
+      case 7:
         {
           _selectedWidget = const Setting();
         }

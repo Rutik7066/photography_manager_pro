@@ -1,19 +1,11 @@
-import 'dart:ffi';
-import 'dart:io';
-import 'dart:typed_data';
+
 import 'package:auto_size_text/auto_size_text.dart';
 import 'package:data_table_2/data_table_2.dart';
 import 'package:dropdown_button2/dropdown_button2.dart';
-import 'package:ffi/ffi.dart';
-import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_typeahead/flutter_typeahead.dart';
 import 'package:flutter_vector_icons/flutter_vector_icons.dart';
-import 'package:jk_photography_manager/repo/whatsapptemplate.dart';
 import 'package:provider/provider.dart';
-import 'package:url_launcher/url_launcher.dart';
-import 'package:url_launcher/url_launcher_string.dart';
-import 'package:win32/win32.dart';
 import 'package:jk_photography_manager/auth/auth.dart';
 import 'package:jk_photography_manager/auth/m_user.dart';
 import 'package:jk_photography_manager/common_widgets/my_textfield.dart';
@@ -26,6 +18,8 @@ import 'package:jk_photography_manager/model/m_product.dart';
 import 'package:jk_photography_manager/provider/business_provider.dart';
 import 'package:jk_photography_manager/provider/customer_provider.dart';
 import 'package:jk_photography_manager/provider/product_provider.dart';
+
+import '../../whatsapp_services/whatsapp_function.dart';
 
 class NewBill extends StatefulWidget {
   const NewBill({Key? key}) : super(key: key);
@@ -152,7 +146,6 @@ class _NewBillState extends State<NewBill> {
             Padding(
               padding: const EdgeInsets.all(10),
               child: MyTextField(
-                
                 width: 200,
                 hintText: 'Qty',
                 controller: _qtyController,
@@ -365,6 +358,7 @@ class _NewBillState extends State<NewBill> {
                           payment,
                           _dropdowninitvalue,
                         );
+                        String number = _selectedCustomer!.number!;
                         customerprovider.getAllBills();
                         regularbillcontroller.clear();
                         _productController.clear();
@@ -372,6 +366,9 @@ class _NewBillState extends State<NewBill> {
                         _qtyController.clear();
                         _disController.clear();
                         _payController.clear();
+
+                        String message = "Welcome To ${user.userBussinessName}, We are happy to have you";
+                        WhatsappFunction().createMessage(number: number, message: message);
                       } else {
                         final bar = SnackBar(
                           behavior: SnackBarBehavior.floating,
@@ -421,6 +418,8 @@ class _NewBillState extends State<NewBill> {
                           payment,
                           _dropdowninitvalue,
                         );
+                        String number = _selectedCustomer!.number!;
+                                    String customer = _selectedCustomer!.name!;
                         customerprovider.getAllBills();
                         regularbillcontroller.clear();
                         _productController.clear();
@@ -428,6 +427,8 @@ class _NewBillState extends State<NewBill> {
                         _qtyController.clear();
                         _disController.clear();
                         _payController.clear();
+                        String message ="Dear $customer,\nThank You so much for visiting ${user.userBussinessName}.\nWe are happy to have you.";
+                        WhatsappFunction().createMessage(number: number, message: message);
                       } else {
                         final bar = SnackBar(
                           behavior: SnackBarBehavior.floating,

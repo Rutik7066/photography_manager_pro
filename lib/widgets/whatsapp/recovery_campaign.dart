@@ -1,3 +1,5 @@
+import 'dart:ffi';
+
 import 'package:data_table_2/data_table_2.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_vector_icons/flutter_vector_icons.dart';
@@ -6,6 +8,7 @@ import 'package:jk_photography_manager/model/m_customer.dart';
 import 'package:jk_photography_manager/whatsapp_services/whatsapp_function.dart';
 import 'package:jk_photography_manager/whatsapp_services/whatsapp_provider.dart';
 import 'package:provider/provider.dart';
+import 'package:win32/win32.dart';
 
 class RecoveryCampaign extends StatelessWidget {
   const RecoveryCampaign({Key? key}) : super(key: key);
@@ -54,9 +57,8 @@ class RecoveryCampaign extends StatelessWidget {
                         iconData: FontAwesome.send,
                         iconSize: 13,
                         onPressed: () async {
-                          String message =
-                              'Hi ${c.nickname}.\nWe are here to inform you that\nyour payment of \u20A8 ${c.totalRecoveryAmount} is still pending. Kindly pay as soon as possible.\nTo get more information about this kindly visit the studio.';
-                           WhatsappFunction.createMessage(number: c.number.toString(), message: message);
+                          String message = 'Hi ${c.nickname}.\nWe are here to inform you that\nyour payment of \u20A8 ${c.totalRecoveryAmount} is still pending. Kindly pay as soon as possible.\nTo get more information about this kindly visit the studio.';
+                          WhatsappFunction().createMessage(number: c.number.toString(), message: message);
                         },
                       ),
                     ),
