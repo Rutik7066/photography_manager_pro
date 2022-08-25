@@ -40,7 +40,7 @@ class _NewQuotationState extends State<NewQuotation> {
     MUser user = auth.giveMetheUser();
     return Center(
       child: SizedBox(
-        width: 600,
+        width: MediaQuery.of(context).size.width,
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
@@ -138,7 +138,7 @@ class _NewQuotationState extends State<NewQuotation> {
             ]),
             const SizedBox(height: 1, child: Divider()),
             SizedBox(
-              width: 600,
+              width: MediaQuery.of(context).size.width,
               child: Padding(
                 padding: const EdgeInsets.all(10.0),
                 child: LayoutBuilder(builder: (context, c) {
@@ -193,7 +193,7 @@ class _NewQuotationState extends State<NewQuotation> {
             const SizedBox(height: 1, child: Divider()),
             Expanded(
               child: SizedBox(
-                width: 600,
+                width: MediaQuery.of(context).size.width,
                 child: Padding(
                   padding: const EdgeInsets.all(10.0),
                   child: ListView.builder(
@@ -278,7 +278,7 @@ class _NewQuotationState extends State<NewQuotation> {
               ),
             ),
             SizedBox(
-              width: 600,
+              width: MediaQuery.of(context).size.width,
               child: Row(mainAxisAlignment: MainAxisAlignment.end, children: [
                 total != null
                     ? Text(

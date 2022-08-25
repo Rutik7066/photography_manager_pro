@@ -160,7 +160,7 @@ class _QuotationToImageState extends State<QuotationToImage> {
                             List<String>? des = product['Description'];
                             print(des == null);
                             return DataRow2.byIndex(
-                              color : MaterialStateProperty.all(style.canvasColor),
+                              color: MaterialStateProperty.all(style.canvasColor),
                               specificRowHeight: des == null ? 40 : (des.length * style.textTheme.bodyLarge!.fontSize!) + style.textTheme.bodyMedium!.fontSize! + 36,
                               index: index,
                               cells: [
@@ -257,14 +257,6 @@ class _QuotationToImageState extends State<QuotationToImage> {
                                       Padding(
                                         padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 3),
                                         child: Text('Final:', style: style.textTheme.labelLarge),
-                                      ),
-                                      Padding(
-                                        padding: const EdgeInsets.only(left: 8, bottom: 3),
-                                        child: Text('Paid:', style: style.textTheme.labelLarge),
-                                      ),
-                                      Padding(
-                                        padding: const EdgeInsets.only(left: 8, bottom: 3),
-                                        child: Text('Unpaid:', style: style.textTheme.labelLarge),
                                       ),
                                     ],
                                   ),
