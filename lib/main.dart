@@ -71,8 +71,7 @@ class MyApp extends StatelessWidget {
             ChangeNotifierProvider<WhatsappProvider>.value(value: WhatsappProvider()),
             ChangeNotifierProvider<ProductProvider>.value(value: ProductProvider()),
           ],
-          child:
-              MaterialApp(
+          child: MaterialApp(
             debugShowCheckedModeBanner: false,
             theme: ThemeData(
               primarySwatch: Colors.indigo,
@@ -85,7 +84,7 @@ class MyApp extends StatelessWidget {
               ),
             ),
             title: 'Photography Manager',
-           home: auth.route ?? const Layout(),
+            home: auth.route ?? const Layout(),
           ),
         );
       },

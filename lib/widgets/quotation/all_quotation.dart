@@ -4,6 +4,8 @@ import 'package:jk_photography_manager/common_widgets/widget_to_image/quotation_
 import 'package:jk_photography_manager/model/m_quotation.dart';
 import 'package:jk_photography_manager/repo/quotation_repo.dart';
 
+import '../../invoice.dart';
+
 class AllQuotation extends StatefulWidget {
   const AllQuotation({Key? key}) : super(key: key);
 
@@ -41,7 +43,7 @@ class _AllQuotationState extends State<AllQuotation> {
                   showDialog(
                       context: context,
                       builder: (context) {
-                        return QuotationToImage(qou: quote);
+                        return Invoice(qou: quote);
                       });
                 },
                 index: index,

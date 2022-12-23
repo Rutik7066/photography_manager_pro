@@ -9,7 +9,7 @@ import 'package:provider/provider.dart';
 
 import '../../auth/auth.dart';
 import '../../auth/m_user.dart';
-import '../../common_widgets/widget_to_image/quotation_to_image.dart';
+import '../../invoice.dart';
 import '../../model/m_product.dart';
 import '../../provider/product_provider.dart';
 import '../../whatsapp_services/whatsapp_function.dart';
@@ -215,62 +215,63 @@ class _NewQuotationState extends State<NewQuotation> {
                           color: Colors.indigo,
                         ),
                         child: ListTile(
-                            contentPadding: EdgeInsets.zero,
-                            title: Row(
-                              mainAxisSize: MainAxisSize.max,
-                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                              children: [
-                                Expanded(
-                                  child: Padding(
-                                    padding: const EdgeInsets.only(right: 5),
-                                    child: SizedBox(
-                                      width: w,
-                                      child: AutoSizeText(
-                                        product['product'],
-                                        style: style.textTheme.bodyLarge,
-                                        maxLines: 2,
-                                      ),
+                          contentPadding: EdgeInsets.zero,
+                          title: Row(
+                            mainAxisSize: MainAxisSize.max,
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            children: [
+                              Expanded(
+                                child: Padding(
+                                  padding: const EdgeInsets.only(right: 5),
+                                  child: SizedBox(
+                                    width: w,
+                                    child: AutoSizeText(
+                                      product['product'],
+                                      style: style.textTheme.bodyLarge,
+                                      maxLines: 2,
                                     ),
                                   ),
                                 ),
-                                Padding(
-                                  padding: const EdgeInsets.symmetric(horizontal: 5),
-                                  child: SizedBox(
-                                    width: w,
-                                    child: AutoSizeText(product['price'].toString(), style: style.textTheme.bodyLarge),
+                              ),
+                              Padding(
+                                padding: const EdgeInsets.symmetric(horizontal: 5),
+                                child: SizedBox(
+                                  width: w,
+                                  child: AutoSizeText(product['price'].toString(), style: style.textTheme.bodyLarge),
+                                ),
+                              ),
+                              Padding(
+                                padding: const EdgeInsets.symmetric(horizontal: 5),
+                                child: SizedBox(
+                                  width: w,
+                                  child: AutoSizeText(product['qty'].toString(), style: style.textTheme.bodyLarge),
+                                ),
+                              ),
+                              Padding(
+                                padding: const EdgeInsets.only(left: 5),
+                                child: SizedBox(
+                                  width: w,
+                                  child: Row(
+                                    mainAxisAlignment: MainAxisAlignment.end,
+                                    children: [
+                                      Text(product['totalprice'].toString(), style: style.textTheme.bodyLarge),
+                                    ],
                                   ),
                                 ),
-                                Padding(
-                                  padding: const EdgeInsets.symmetric(horizontal: 5),
-                                  child: SizedBox(
-                                    width: w,
-                                    child: AutoSizeText(product['qty'].toString(), style: style.textTheme.bodyLarge),
+                              ),
+                            ],
+                          ),
+                          subtitle: des.isNotEmpty
+                              ? ListView(
+                                  shrinkWrap: true,
+                                  children: List.generate(
+                                    des.length,
+                                    (index) => Text(des[index]),
+                                    growable: false,
                                   ),
-                                ),
-                                Padding(
-                                  padding: const EdgeInsets.only(left: 5),
-                                  child: SizedBox(
-                                    width: w,
-                                    child: Row(
-                                      mainAxisAlignment: MainAxisAlignment.end,
-                                      children: [
-                                        Text(product['totalprice'].toString(), style: style.textTheme.bodyLarge),
-                                      ],
-                                    ),
-                                  ),
-                                ),
-                              ],
-                            ),
-                            subtitle: des.isNotEmpty
-                                ? ListView(
-                                    shrinkWrap: true,
-                                    children: List.generate(
-                                      des.length,
-                                      (index) => Text(des[index]),
-                                      growable: false,
-                                    ),
-                                  )
-                                : null),
+                                )
+                              : null,
+                        ),
                       );
                     },
                   ),
@@ -316,7 +317,7 @@ class _NewQuotationState extends State<NewQuotation> {
                           await showDialog(
                               context: context,
                               builder: (context) {
-                                return QuotationToImage(qou: quotation);
+                                return Invoice(qou: quotation);
                               }).whenComplete(() async => await WhatsappFunction().createMessage(number: _numberC.text, message: message));
                         }
                       },

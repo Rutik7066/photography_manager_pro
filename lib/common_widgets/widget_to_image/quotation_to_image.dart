@@ -4,14 +4,12 @@ import 'package:auto_size_text/auto_size_text.dart';
 import 'package:data_table_2/data_table_2.dart';
 import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/rendering.dart';
+
 import 'package:flutter_vector_icons/flutter_vector_icons.dart';
 import 'package:jk_photography_manager/auth/auth.dart';
 import 'package:jk_photography_manager/auth/m_user.dart';
 
 import 'dart:io';
-import 'dart:typed_data';
-import 'dart:ui';
 
 import 'package:jk_photography_manager/model/m_bill.dart';
 import 'package:jk_photography_manager/model/m_quotation.dart';
@@ -35,6 +33,7 @@ class _QuotationToImageState extends State<QuotationToImage> {
   String ref = '';
 
   GlobalKey _imageKey = GlobalKey();
+  bool breakdown = true;
 
   @override
   Widget build(BuildContext context) {
@@ -44,173 +43,160 @@ class _QuotationToImageState extends State<QuotationToImage> {
     return AlertDialog(
       content: RepaintBoundary(
         key: _imageKey,
-        child: Padding(
-          padding: const EdgeInsets.all(8),
-          child: ConstrainedBox(
-            constraints: const BoxConstraints(minHeight: 1050, minWidth: 550, maxWidth: 550),
-            child: Container(
-              decoration: BoxDecoration(color: Colors.white, border: Border.all(color: Colors.black), borderRadius: BorderRadius.circular(3)),
-              child: Column(
-                children: [
-                  Row(
-                    children: [
-                      Padding(
+        child: ConstrainedBox(
+          constraints: const BoxConstraints(minHeight: 1050, minWidth: 550, maxWidth: 550),
+          child: Container(
+            margin: EdgeInsets.all(3),
+            decoration: BoxDecoration(color: Colors.white, border: Border.all(color: Colors.black), borderRadius: BorderRadius.zero),
+            child: Column(
+              children: [
+                Text(
+                  'Quotation/ Order Form',
+                  style: style.textTheme.labelLarge,
+                ),
+                Row(
+                  children: [
+                    Padding(
+                      padding: const EdgeInsets.all(8.0),
+                      child: SizedBox(
+                        height: 90,
+                        child: AspectRatio(
+                          aspectRatio: 2 / 2,
+                          child: user.logo != null ? Image.memory(user.logo!) : Container(),
+                        ),
+                      ),
+                    ),
+                    Expanded(
+                      child: Padding(
                         padding: const EdgeInsets.all(8.0),
-                        child: SizedBox(
-                          height: 90,
-                          child: AspectRatio(
-                            aspectRatio: 2 / 2,
-                            child: user.logo != null
-                                ? Image.memory(user.logo!)
-                                : Container(
-                                    height: 100,
-                                    width: 100,
-                                  ),
-                          ),
-                        ),
-                      ),
-                      SizedBox(
-                        width: 390,
-                        child: Padding(
-                          padding: const EdgeInsets.all(8.0),
-                          child: Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              SizedBox(
-                                width: 400,
-                                child: AutoSizeText(
-                                  user.userBussinessName,
-                                  style: style.textTheme.headline6,
-                                ),
-                              ),
-                              SizedBox(
-                                width: 400,
-                                child: AutoSizeText(
-                                  'Mo. ${user.userNumber}',
-                                  style: style.textTheme.bodyLarge,
-                                ),
-                              ),
-                              SizedBox(
-                                width: 400,
-                                child: Wrap(
-                                  children: [
-                                    Text(
-                                      user.userBussinessAddress,
-                                      maxLines: 3,
-                                      style: style.textTheme.bodyLarge,
-                                    ),
-                                  ],
-                                ),
-                              )
-                            ],
-                          ),
-                        ),
-                      )
-                    ],
-                  ),
-                  Container(
-                    height: 1,
-                    color: Colors.black,
-                    width: 550,
-                  ),
-                  Column(
-                    children: [
-                      Row(
-                        children: [
-                          Padding(
-                            padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 5),
-                            child: Text(
-                              '${widget.qou.name}',
-                              style: style.textTheme.labelMedium,
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Text(
+                              user.userBussinessName,
+                              style: style.textTheme.headline6,
                             ),
-                          )
-                        ],
+                            AutoSizeText(
+                              'Mo. ${user.userNumber}',
+                              style: style.textTheme.bodyLarge,
+                            ),
+                            AutoSizeText(
+                              user.userBussinessAddress,
+                              maxLines: 3,
+                              style: style.textTheme.bodyLarge,
+                            )
+                          ],
+                        ),
                       ),
-                    ],
-                  ),
-                  Container(
-                    height: 1,
-                    color: Colors.black,
+                    )
+                  ],
+                ),
+                Container(
+                  height: 1,
+                  color: Colors.black,
+                  width: 550,
+                ),
+                Column(
+                  children: [
+                    Row(
+                      children: [
+                        Padding(
+                          padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 5),
+                          child: Text(
+                            '${widget.qou.name}',
+                            style: style.textTheme.labelMedium,
+                          ),
+                        )
+                      ],
+                    ),
+                  ],
+                ),
+                Container(
+                  height: 1,
+                  color: Colors.black,
+                  width: 550,
+                ),
+                Flexible(
+                  child: SizedBox(
                     width: 550,
-                  ),
-                  Flexible(
-                    child: SizedBox(
-                      width: 550,
-                      child: DataTable2(
-                          horizontalMargin: 10,
-                          columnSpacing: 10,
-                          headingRowHeight: 30,
-                          showBottomBorder: true,
-                          headingRowColor: MaterialStateProperty.all(const Color.fromARGB(71, 255, 172, 64)),
-                          columns: [
-                            DataColumn2(label: Text('No.', style: style.textTheme.labelMedium), fixedWidth: 45),
-                            DataColumn2(label: Text('Product', style: style.textTheme.labelMedium), size: ColumnSize.L),
-                            DataColumn2(label: Text('Price', style: style.textTheme.labelMedium), size: ColumnSize.S),
-                            DataColumn2(label: Text('Qty', style: style.textTheme.labelMedium), fixedWidth: 80),
+                    child: DataTable2(
+                        lmRatio: 1.5,
+                        horizontalMargin: 10,
+                        columnSpacing: 10,
+                        headingRowHeight: 30,
+                        showBottomBorder: true,
+                        headingRowColor: MaterialStateProperty.all(const Color.fromARGB(71, 255, 172, 64)),
+                        columns: [
+                          DataColumn2(label: Text('No.', style: style.textTheme.labelMedium), fixedWidth: 45),
+                          DataColumn2(label: Text('Product', style: style.textTheme.labelMedium), size: ColumnSize.L),
+                          DataColumn2(label: Text('Price', style: style.textTheme.labelMedium), size: ColumnSize.S),
+                          DataColumn2(label: Text('Qty', style: style.textTheme.labelMedium), fixedWidth: 80),
+                          if (breakdown == true)
                             DataColumn2(
                               label: Text(
                                 'Total',
                                 style: style.textTheme.labelMedium,
                               ),
                               size: ColumnSize.S,
-                            ),
-                          ],
-                          rows: List.generate(widget.qou.cart.length, (index) {
-                            Map<dynamic, dynamic> product = widget.qou.cart[index];
-                            List<String>? des = product['Description'];
-                            print(des == null);
-                            return DataRow2.byIndex(
-                              color: MaterialStateProperty.all(style.canvasColor),
-                              specificRowHeight: des == null ? 40 : (des.length * style.textTheme.bodyLarge!.fontSize!) + style.textTheme.bodyMedium!.fontSize! + 36,
-                              index: index,
-                              cells: [
-                                DataCell(Padding(
-                                  padding: const EdgeInsets.symmetric(vertical: 10),
-                                  child: Column(
-                                    children: [
-                                      Text('${index + 1}', style: style.textTheme.labelMedium),
-                                    ],
-                                  ),
-                                )),
-                                DataCell(Padding(
-                                  padding: const EdgeInsets.symmetric(vertical: 10),
-                                  child: Column(
-                                    crossAxisAlignment: CrossAxisAlignment.start,
-                                    children: [
-                                      Text(product['product'], style: style.textTheme.labelMedium),
-                                      if (des != null)
-                                        Padding(
-                                          padding: const EdgeInsets.symmetric(vertical: 2),
-                                          child: ListView(
-                                            shrinkWrap: true,
-                                            children: List.generate(
-                                                des.length,
-                                                (index) => Text(
-                                                      des[index],
-                                                      style: style.textTheme.bodySmall,
-                                                    ),
-                                                growable: false),
-                                          ),
-                                        )
-                                    ],
-                                  ),
-                                )),
-                                DataCell(Padding(
-                                  padding: const EdgeInsets.symmetric(vertical: 10),
-                                  child: Column(
-                                    children: [
-                                      Text('${product['price']}', style: style.textTheme.labelMedium),
-                                    ],
-                                  ),
-                                )),
-                                DataCell(Padding(
-                                  padding: const EdgeInsets.symmetric(vertical: 10),
-                                  child: Column(
-                                    children: [
-                                      Text('${product['qty']}', style: style.textTheme.labelMedium),
-                                    ],
-                                  ),
-                                )),
+                            )
+                        ],
+                        rows: List.generate(widget.qou.cart.length, (index) {
+                          Map<dynamic, dynamic> product = widget.qou.cart[index];
+                          List<String>? des = product['Description'];
+                          print(des == null);
+                          return DataRow2.byIndex(
+                            color: MaterialStateProperty.all(style.canvasColor),
+                            specificRowHeight: des == null ? 40 : (des.length * style.textTheme.bodyLarge!.fontSize!) + style.textTheme.bodyMedium!.fontSize! + 36,
+                            index: index,
+                            cells: [
+                              DataCell(Padding(
+                                padding: const EdgeInsets.symmetric(vertical: 10),
+                                child: Column(
+                                  children: [
+                                    Text('${index + 1}', style: style.textTheme.labelMedium),
+                                  ],
+                                ),
+                              )),
+                              DataCell(Padding(
+                                padding: const EdgeInsets.symmetric(vertical: 10),
+                                child: Column(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: [
+                                    Text(product['product'], style: style.textTheme.labelMedium),
+                                    if (des != null)
+                                      Padding(
+                                        padding: const EdgeInsets.symmetric(vertical: 2),
+                                        child: ListView(
+                                          shrinkWrap: true,
+                                          children: List.generate(
+                                              des.length,
+                                              (index) => Text(
+                                                    des[index],
+                                                    style: style.textTheme.bodySmall,
+                                                  ),
+                                              growable: false),
+                                        ),
+                                      )
+                                  ],
+                                ),
+                              )),
+                              DataCell(Padding(
+                                padding: const EdgeInsets.symmetric(vertical: 10),
+                                child: Column(
+                                  children: [
+                                    Text('${product['price']}', style: style.textTheme.labelMedium),
+                                  ],
+                                ),
+                              ),),
+                              DataCell(Padding(
+                                padding: const EdgeInsets.symmetric(vertical: 10),
+                                child: Column(
+                                  children: [
+                                    Text('${product['qty']}', style: style.textTheme.labelMedium),
+                                  ],
+                                ),
+                              ),),
+                              if (breakdown == true)
                                 DataCell(
                                   Padding(
                                     padding: const EdgeInsets.symmetric(vertical: 10),
@@ -221,90 +207,99 @@ class _QuotationToImageState extends State<QuotationToImage> {
                                     ),
                                   ),
                                 ),
+                            ],
+                          );
+                        },),),
+                  ),
+                ),
+                //
+                Container(
+                  height: 1,
+                  color: Colors.black,
+                  width: 550,
+                ),
+                SizedBox(
+                  height: 80,
+                  width: 550,
+                  child: Row(
+                    children: [
+                      Expanded(
+                        flex: 2,
+                        child: Column(
+                          children: [
+                            Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                              children: [
+                                Column(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: [
+                                    Padding(
+                                      padding: const EdgeInsets.only(left: 8, top: 3),
+                                      child: Text('Total:', style: style.textTheme.labelMedium),
+                                    ),
+                                    Padding(
+                                      padding: const EdgeInsets.symmetric(horizontal: 8),
+                                      child: Text('Discount:', style: style.textTheme.labelMedium),
+                                    ),
+                                    Padding(
+                                      padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 3),
+                                      child: Text('Final:', style: style.textTheme.labelMedium),
+                                    ),
+                                  ],
+                                ),
+                                Column(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: [
+                                    Padding(
+                                      padding: const EdgeInsets.only(left: 8, top: 3),
+                                      child: Text('${widget.qou.total}', style: style.textTheme.labelMedium),
+                                    ),
+                                    Padding(
+                                      padding: const EdgeInsets.symmetric(horizontal: 8),
+                                      child: Text('${widget.qou.discount}', style: style.textTheme.labelMedium),
+                                    ),
+                                    Padding(
+                                      padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 3),
+                                      child: Text('${widget.qou.finalTotal}', style: style.textTheme.labelMedium),
+                                    ),
+                                  ],
+                                )
                               ],
-                            );
-                          })),
-                    ),
-                  ),
-                  Container(
-                    height: 1,
-                    color: Colors.black,
-                    width: 550,
-                  ),
-                  SizedBox(
-                    height: 110,
-                    width: 550,
-                    child: Row(
-                      children: [
-                        SizedBox(
-                          width: 270,
-                          child: Column(
-                            children: [
-                              Row(
-                                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                                children: [
-                                  Column(
-                                    crossAxisAlignment: CrossAxisAlignment.start,
-                                    children: [
-                                      Padding(
-                                        padding: const EdgeInsets.only(left: 8, top: 3),
-                                        child: Text('Total:', style: style.textTheme.labelLarge),
-                                      ),
-                                      Padding(
-                                        padding: const EdgeInsets.symmetric(horizontal: 8),
-                                        child: Text('Discount:', style: style.textTheme.labelLarge),
-                                      ),
-                                      Padding(
-                                        padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 3),
-                                        child: Text('Final:', style: style.textTheme.labelLarge),
-                                      ),
-                                    ],
-                                  ),
-                                  Column(
-                                    crossAxisAlignment: CrossAxisAlignment.start,
-                                    children: [
-                                      Padding(
-                                        padding: const EdgeInsets.only(left: 8, top: 3),
-                                        child: Text('${widget.qou.total}', style: style.textTheme.labelLarge),
-                                      ),
-                                      Padding(
-                                        padding: const EdgeInsets.symmetric(horizontal: 8),
-                                        child: Text('${widget.qou.discount}', style: style.textTheme.labelLarge),
-                                      ),
-                                      Padding(
-                                        padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 3),
-                                        child: Text('${widget.qou.finalTotal}', style: style.textTheme.labelLarge),
-                                      ),
-                                    ],
-                                  )
-                                ],
-                              )
-                            ],
-                          ),
+                            )
+                          ],
                         ),
-                        Container(
-                          width: 1,
-                          height: 110,
-                          color: Colors.black,
+                      ),
+                      Container(
+                        width: 1,
+                        height: 80,
+                        color: Colors.black,
+                      ),
+                      Expanded(
+                        flex: 3,
+                        child: Column(
+                          mainAxisAlignment: MainAxisAlignment.end,
+                          crossAxisAlignment: CrossAxisAlignment.center,
+                          children: [
+                            Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceAround,
+                              children: [
+                                Text(
+                                  'Customer Sign',
+                                  style: style.textTheme.labelMedium,
+                                ),
+                                Text(
+                                  '${user.userName}',
+                                  style: style.textTheme.labelMedium,
+                                ),
+                              ],
+                            )
+                          ],
                         ),
-                        SizedBox(
-                          width: 270,
-                          child: Column(
-                            mainAxisAlignment: MainAxisAlignment.end,
-                            crossAxisAlignment: CrossAxisAlignment.center,
-                            children: [
-                              Text(
-                                'Jk Studio',
-                                style: style.textTheme.bodyLarge,
-                              )
-                            ],
-                          ),
-                        )
-                      ],
-                    ),
-                  )
-                ],
-              ),
+                      )
+                    ],
+                  ),
+                )
+              ],
             ),
           ),
         ),
@@ -313,6 +308,17 @@ class _QuotationToImageState extends State<QuotationToImage> {
         Text(
           ref,
           style: style.textTheme.bodyLarge!.copyWith(color: Colors.green),
+        ),
+        Checkbox(
+            value: breakdown,
+            onChanged: (v) {
+              setState(() {
+                breakdown = v!;
+              });
+            }),
+        Text(
+          'Price Breakdown',
+          style: style.textTheme.labelLarge,
         ),
         Padding(
           padding: const EdgeInsets.all(5.0),

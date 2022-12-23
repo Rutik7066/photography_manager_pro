@@ -156,6 +156,7 @@ class _BillToImageState extends State<BillToImage> {
                     child: SizedBox(
                       width: 550,
                       child: DataTable2(
+                      
                           horizontalMargin: 10,
                           columnSpacing: 10,
                           headingRowHeight: 30,
