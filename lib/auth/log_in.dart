@@ -2,8 +2,6 @@ import 'package:bitsdojo_window/bitsdojo_window.dart';
 import 'package:flutter/material.dart';
 import 'package:jk_photography_manager/auth/auth.dart';
 import 'package:jk_photography_manager/common_widgets/my_textfield.dart';
-import 'package:jk_photography_manager/layout/custom_title_bar.dart';
-import 'package:jk_photography_manager/layout/theme.dart';
 import 'package:provider/provider.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 
@@ -93,7 +91,7 @@ class _LogInState extends State<LogIn> {
                           child: ElevatedButton(
                               onPressed: () async {
                                 if (_email.text != '' && _password.text != '') {
-                                  var r = await auth.signin(email: _email.text, password: _password.text);
+                                  var r = await auth.signin(email: _email.text, pass: _password.text);
                                   if (r == 1) {
                                     ScaffoldMessenger.of(context).showSnackBar(
                                       SnackBar(

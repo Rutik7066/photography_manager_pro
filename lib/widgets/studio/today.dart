@@ -1,17 +1,11 @@
-import 'dart:ffi';
-import 'dart:io';
-import 'package:ffi/ffi.dart';
 import 'package:data_table_2/data_table_2.dart';
 import 'package:dropdown_button2/dropdown_button2.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_typeahead/flutter_typeahead.dart';
-import 'package:flutter_vector_icons/flutter_vector_icons.dart';
-import 'package:hive/hive.dart';
 import 'package:intl/intl.dart';
 import 'package:jk_photography_manager/common_widgets/bill_info.dart';
 import 'package:jk_photography_manager/common_widgets/event_info.dart';
 import 'package:jk_photography_manager/common_widgets/my_textfield.dart';
-import 'package:jk_photography_manager/common_widgets/new_customer.dart';
 import 'package:jk_photography_manager/common_widgets/widget_to_image/bill_to_image.dart';
 import 'package:jk_photography_manager/controller/quick_bill.dart';
 import 'package:jk_photography_manager/model/daily/m_datatable_row.dart';
@@ -25,13 +19,10 @@ import 'package:jk_photography_manager/provider/customer_provider.dart';
 import 'package:jk_photography_manager/whatsapp_services/whatsapp_function.dart';
 import 'package:jk_photography_manager/widgets/studio/widget/alert_payment_rec.dart';
 import 'package:provider/provider.dart';
-import 'package:url_launcher/url_launcher.dart';
-import 'package:win32/win32.dart';
 
 import '../../auth/auth.dart';
 import '../../auth/m_user.dart';
 import '../../provider/product_provider.dart';
-import '../../repo/whatsapptemplate.dart';
 
 class Today extends StatefulWidget {
   const Today({Key? key}) : super(key: key);
@@ -41,19 +32,19 @@ class Today extends StatefulWidget {
 }
 
 class _TodayState extends State<Today> {
-  TextEditingController _productController = TextEditingController();
+  final TextEditingController _productController = TextEditingController();
 
-  TextEditingController _customerController = TextEditingController();
+  final TextEditingController _customerController = TextEditingController();
 
-  TextEditingController _qtyController = TextEditingController();
+  final TextEditingController _qtyController = TextEditingController();
 
-  TextEditingController _disController = TextEditingController();
+  final TextEditingController _disController = TextEditingController();
 
-  TextEditingController _payController = TextEditingController();
+  final TextEditingController _payController = TextEditingController();
 
   String todaydate = DateFormat.yMMMMd('en_US').format(DateTime.now());
 
-  TextEditingController _numberController = TextEditingController();
+  final TextEditingController _numberController = TextEditingController();
   bool isEnabled = true;
 
   @override
@@ -319,10 +310,19 @@ class _TodayState extends State<Today> {
                                     String number = _numberController.text;
                                     String customer = _customerController.text;
                                     addToQuickBill(quickbill: quickbill, today: today, customerprovider: customerprovider, style: style);
-                                    String message = "Dear $customer,\nThank You so much for visiting ${user.userBussinessName}.\nWe are happy to have you.";
-                                    WhatsappFunction().createMessage(number: number, message: message);
                                   },
-                                  child: Text('Add')),
+                                  child: const Text('Add')),
+                            ),
+                          ),
+                          Padding(
+                            padding: const EdgeInsets.all(3.0),
+                            child: SizedBox(
+                              height: 30,
+                              child: ElevatedButton(
+                                  onPressed: () {
+                                    showToQuickBill(quickbill: quickbill, today: today, customerprovider: customerprovider, style: style);
+                                  },
+                                  child: const Text('Generate Bill')),
                             ),
                           ),
                         ],
@@ -414,11 +414,52 @@ class _TodayState extends State<Today> {
     );
   }
 
+  showToQuickBill({quickbill, today, customerprovider, style}) async {
+    quickbill.selectedCustomerName = _customerController.text;
+    quickbill.selectedCustomerNumber = _numberController.text;
+    MBill? r = await quickbill.addbill();
+    if (r != null) {
+      today.init();
+      _customerController.clear();
+      _productController.clear();
+      _qtyController.clear();
+      _disController.clear();
+      _payController.clear();
+      _numberController.clear();
+      quickbill.clear();
+      customerprovider.resetBills();
+      setState(() {
+        isEnabled = true;
+      });
+      await showDialog(
+          context: context,
+          builder: (context) {
+            return BillToImage(bill: r);
+          });
+    } else {
+      final bar = SnackBar(
+        behavior: SnackBarBehavior.floating,
+        backgroundColor: style.errorColor,
+        duration: const Duration(seconds: 5),
+        content: Text(
+          'Something went wrong. Kindly fill all information correctly',
+          style: TextStyle(
+            color: Colors.white,
+            fontSize: style.textTheme.bodyLarge!.fontSize ?? 14,
+            fontWeight: style.textTheme.bodyLarge!.fontWeight,
+          ),
+        ),
+        action: SnackBarAction(label: 'Ok', textColor: Colors.white, onPressed: () {}),
+      );
+      ScaffoldMessenger.of(context).showSnackBar(bar);
+    }
+  }
+
   addToQuickBill({quickbill, today, customerprovider, style}) async {
     quickbill.selectedCustomerName = _customerController.text;
     quickbill.selectedCustomerNumber = _numberController.text;
-    var r = await quickbill.addbill();
-    if (r == true) {
+    MBill? r = await quickbill.addbill();
+    if (r != null) {
       today.init();
       _customerController.clear();
       _productController.clear();
@@ -434,7 +475,6 @@ class _TodayState extends State<Today> {
     } else {
       final bar = SnackBar(
         behavior: SnackBarBehavior.floating,
-        width: MediaQuery.of(context).size.height - 40,
         backgroundColor: style.errorColor,
         duration: const Duration(seconds: 5),
         content: Text(

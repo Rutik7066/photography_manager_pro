@@ -43,9 +43,11 @@ void main() async {
   await Hive.openBox('FinanceBox');
   await Hive.openBox('QuotationBox');
   await Hive.openBox('ExtraNumBox');
-  await Hive.openBox('knfgirn');
+  await Hive.openBox('cfjfgjfjg');
   await Hive.openBox<MProduct>('ProductBox');
   await Hive.openBox('msgtemp');
+  await Hive.openBox('whatsappapi');
+  await  Auth().signin(email: 'rushimodellingstudio@gmail.com', pass: 'shobhaprakash');
   runApp(const MyApp());
 }
 
@@ -58,6 +60,7 @@ class MyApp extends StatelessWidget {
       create: (BuildContext context) => Auth(),
       builder: (context, _) {
         var auth = Provider.of<Auth>(context);
+        
         auth.check();
         return MultiProvider(
           providers: [

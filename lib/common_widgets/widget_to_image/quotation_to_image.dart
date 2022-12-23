@@ -11,11 +11,12 @@ import 'package:jk_photography_manager/auth/m_user.dart';
 
 import 'dart:io';
 
-import 'package:jk_photography_manager/model/m_bill.dart';
 import 'package:jk_photography_manager/model/m_quotation.dart';
-import 'package:printing/printing.dart';
+import 'package:path_provider/path_provider.dart';
 import 'package:provider/provider.dart';
 import 'package:widget_to_image/widget_to_image.dart';
+import '../../repo/whatsapptemplate.dart';
+import '../../whatsapp_api.dart';
 
 class QuotationToImage extends StatefulWidget {
   MQuotation qou;
@@ -32,7 +33,7 @@ class QuotationToImage extends StatefulWidget {
 class _QuotationToImageState extends State<QuotationToImage> {
   String ref = '';
 
-  GlobalKey _imageKey = GlobalKey();
+  GlobalKey imageKey = GlobalKey();
   bool breakdown = true;
 
   @override
@@ -42,11 +43,11 @@ class _QuotationToImageState extends State<QuotationToImage> {
     var style = Theme.of(context);
     return AlertDialog(
       content: RepaintBoundary(
-        key: _imageKey,
+        key: imageKey,
         child: ConstrainedBox(
           constraints: const BoxConstraints(minHeight: 1050, minWidth: 550, maxWidth: 550),
           child: Container(
-            margin: EdgeInsets.all(3),
+            margin: const EdgeInsets.all(3),
             decoration: BoxDecoration(color: Colors.white, border: Border.all(color: Colors.black), borderRadius: BorderRadius.zero),
             child: Column(
               children: [
@@ -120,27 +121,29 @@ class _QuotationToImageState extends State<QuotationToImage> {
                   child: SizedBox(
                     width: 550,
                     child: DataTable2(
-                        lmRatio: 1.5,
-                        horizontalMargin: 10,
-                        columnSpacing: 10,
-                        headingRowHeight: 30,
-                        showBottomBorder: true,
-                        headingRowColor: MaterialStateProperty.all(const Color.fromARGB(71, 255, 172, 64)),
-                        columns: [
-                          DataColumn2(label: Text('No.', style: style.textTheme.labelMedium), fixedWidth: 45),
-                          DataColumn2(label: Text('Product', style: style.textTheme.labelMedium), size: ColumnSize.L),
-                          DataColumn2(label: Text('Price', style: style.textTheme.labelMedium), size: ColumnSize.S),
-                          DataColumn2(label: Text('Qty', style: style.textTheme.labelMedium), fixedWidth: 80),
-                          if (breakdown == true)
-                            DataColumn2(
-                              label: Text(
-                                'Total',
-                                style: style.textTheme.labelMedium,
-                              ),
-                              size: ColumnSize.S,
-                            )
-                        ],
-                        rows: List.generate(widget.qou.cart.length, (index) {
+                      lmRatio: 1.5,
+                      horizontalMargin: 10,
+                      columnSpacing: 10,
+                      headingRowHeight: 30,
+                      showBottomBorder: true,
+                      headingRowColor: MaterialStateProperty.all(const Color.fromARGB(71, 255, 172, 64)),
+                      columns: [
+                        DataColumn2(label: Text('No.', style: style.textTheme.labelMedium), fixedWidth: 45),
+                        DataColumn2(label: Text('Product', style: style.textTheme.labelMedium), size: ColumnSize.L),
+                        DataColumn2(label: Text('Price', style: style.textTheme.labelMedium), size: ColumnSize.S),
+                        DataColumn2(label: Text('Qty', style: style.textTheme.labelMedium), fixedWidth: 80),
+                        if (breakdown == true)
+                          DataColumn2(
+                            label: Text(
+                              'Total',
+                              style: style.textTheme.labelMedium,
+                            ),
+                            size: ColumnSize.S,
+                          )
+                      ],
+                      rows: List.generate(
+                        widget.qou.cart.length,
+                        (index) {
                           Map<dynamic, dynamic> product = widget.qou.cart[index];
                           List<String>? des = product['Description'];
                           print(des == null);
@@ -180,22 +183,26 @@ class _QuotationToImageState extends State<QuotationToImage> {
                                   ],
                                 ),
                               )),
-                              DataCell(Padding(
-                                padding: const EdgeInsets.symmetric(vertical: 10),
-                                child: Column(
-                                  children: [
-                                    Text('${product['price']}', style: style.textTheme.labelMedium),
-                                  ],
+                              DataCell(
+                                Padding(
+                                  padding: const EdgeInsets.symmetric(vertical: 10),
+                                  child: Column(
+                                    children: [
+                                      Text('${product['price']}', style: style.textTheme.labelMedium),
+                                    ],
+                                  ),
                                 ),
-                              ),),
-                              DataCell(Padding(
-                                padding: const EdgeInsets.symmetric(vertical: 10),
-                                child: Column(
-                                  children: [
-                                    Text('${product['qty']}', style: style.textTheme.labelMedium),
-                                  ],
+                              ),
+                              DataCell(
+                                Padding(
+                                  padding: const EdgeInsets.symmetric(vertical: 10),
+                                  child: Column(
+                                    children: [
+                                      Text('${product['qty']}', style: style.textTheme.labelMedium),
+                                    ],
+                                  ),
                                 ),
-                              ),),
+                              ),
                               if (breakdown == true)
                                 DataCell(
                                   Padding(
@@ -209,7 +216,9 @@ class _QuotationToImageState extends State<QuotationToImage> {
                                 ),
                             ],
                           );
-                        },),),
+                        },
+                      ),
+                    ),
                   ),
                 ),
                 //
@@ -321,27 +330,14 @@ class _QuotationToImageState extends State<QuotationToImage> {
           style: style.textTheme.labelLarge,
         ),
         Padding(
-          padding: const EdgeInsets.all(5.0),
+          padding: const EdgeInsets.all(5),
           child: SizedBox(
             height: 30,
-            child: OutlinedButton.icon(
-              onPressed: () async {
-                String? path = Directory.systemTemp.absolute.path;
-                if (path != null) {
-                  ByteData imagebyte = await WidgetToImage.repaintBoundaryToImage(
-                    _imageKey,
-                  );
-                  Uint8List imageint = imagebyte.buffer.asUint8List();
-                  Printer? printer = await Printing.pickPrinter(context: context);
-                  if (printer != null) {
-                    try {
-                      await Printing.layoutPdf(onLayout: (_) => imageint);
-                    } catch (e) {}
-                  }
-                }
+            child: ElevatedButton(
+              onPressed: () {
+                Navigator.pop(context);
               },
-              icon: const Icon(MaterialIcons.print, size: 20),
-              label: const Text('Print'),
+              child: const Text('Close'),
             ),
           ),
         ),
@@ -353,9 +349,9 @@ class _QuotationToImageState extends State<QuotationToImage> {
               onPressed: () async {
                 String? path = await FilePicker.platform.getDirectoryPath();
                 if (path != null) {
-                  ByteData imagebyte = await WidgetToImage.repaintBoundaryToImage(_imageKey, pixelRatio: 5);
+                  ByteData imagebyte = await WidgetToImage.repaintBoundaryToImage(imageKey, pixelRatio: 5);
                   Uint8List imageint = imagebyte.buffer.asUint8List();
-                  File image = File("${path}/${widget.qou.name} ${widget.qou.finalTotal}.png");
+                  File image = File("$path/${widget.qou.name} ${widget.qou.finalTotal}.png");
                   await image.writeAsBytes(imageint);
                   setState(() {
                     ref = 'Saved successfully !';
@@ -368,14 +364,61 @@ class _QuotationToImageState extends State<QuotationToImage> {
           ),
         ),
         Padding(
-          padding: const EdgeInsets.all(5),
+          padding: const EdgeInsets.all(5.0),
           child: SizedBox(
             height: 30,
-            child: ElevatedButton(
-              onPressed: () {
-                Navigator.pop(context);
+            child: OutlinedButton.icon(
+              onPressed: () async {
+                final tempDir = await getTemporaryDirectory();
+                String path = '${tempDir.path}/temp.png';
+                print(path);
+                ByteData imagebyte = await WidgetToImage.repaintBoundaryToImage(imageKey, pixelRatio: 5);
+                Uint8List imageint = imagebyte.buffer.asUint8List();
+                File image = File(path);
+                image.writeAsBytes(imageint).whenComplete(() {
+                  String msg = WhatsAppTemplate().retriveMsg('') ?? '';
+                  WhatsappApi().sendBill(msg: msg, number: '721965611' ?? '', path: path, fileName: path).then((value) {
+                    if (value != 'error') {
+                      final bar = SnackBar(
+                        behavior: SnackBarBehavior.floating,
+                        width: MediaQuery.of(context).size.height - 40,
+                        backgroundColor: Colors.green,
+                        duration: const Duration(seconds: 5),
+                        content: Text(
+                          'Message Sent',
+                          style: TextStyle(
+                            color: Colors.white,
+                            fontSize: style.textTheme.bodyLarge!.fontSize ?? 14,
+                            fontWeight: style.textTheme.bodyLarge!.fontWeight,
+                          ),
+                        ),
+                        action: SnackBarAction(label: 'Ok', textColor: Colors.white, onPressed: () {}),
+                      );
+                      ScaffoldMessenger.of(context).showSnackBar(bar);
+                    } else {
+                      final bar = SnackBar(
+                        behavior: SnackBarBehavior.floating,
+                        width: MediaQuery.of(context).size.height - 40,
+                        backgroundColor: style.errorColor,
+                        duration: const Duration(seconds: 5),
+                        content: Text(
+                          'value.error.toString()',
+                          style: TextStyle(
+                            color: Colors.white,
+                            fontSize: style.textTheme.bodyLarge!.fontSize ?? 14,
+                            fontWeight: style.textTheme.bodyLarge!.fontWeight,
+                          ),
+                        ),
+                        action: SnackBarAction(label: 'Ok', textColor: Colors.white, onPressed: () {}),
+                      );
+                      ScaffoldMessenger.of(context).showSnackBar(bar);
+                    }
+                    Navigator.pop(context);
+                  });
+                });
               },
-              child: const Text('Close'),
+              icon: const Icon(FontAwesome.send, size: 13),
+              label: const Text('Send'),
             ),
           ),
         ),

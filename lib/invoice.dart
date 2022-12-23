@@ -11,10 +11,9 @@ import 'package:jk_photography_manager/auth/m_user.dart';
 
 import 'dart:io';
 
-
 import 'package:jk_photography_manager/model/m_quotation.dart';
-import 'package:printing/printing.dart';
 import 'package:provider/provider.dart';
+import 'package:puppeteer/protocol/page.dart';
 import 'package:widget_to_image/widget_to_image.dart';
 
 class Invoice extends StatefulWidget {
@@ -46,7 +45,6 @@ class _InvoiceState extends State<Invoice> {
         child: ConstrainedBox(
           constraints: const BoxConstraints(minHeight: 1050, minWidth: 550, maxWidth: 550),
           child: Container(
-            margin: const EdgeInsets.all(3),
             decoration: BoxDecoration(color: Colors.white, border: Border.all(color: Colors.black), borderRadius: BorderRadius.zero),
             child: Column(
               children: [
@@ -57,32 +55,28 @@ class _InvoiceState extends State<Invoice> {
                 Row(
                   children: [
                     Padding(
-                      padding: const EdgeInsets.all(8.0),
+                      padding: const EdgeInsets.all(2.0),
                       child: SizedBox(
-                        height: 90,
+                        height: 60,
                         child: AspectRatio(
-                          aspectRatio: 2 / 2,
+                          aspectRatio: 2.5 / 2,
                           child: user.logo != null ? Image.memory(user.logo!) : Container(),
                         ),
                       ),
                     ),
                     Expanded(
                       child: Padding(
-                        padding: const EdgeInsets.all(8.0),
+                        padding: const EdgeInsets.all(2.0),
                         child: Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
                             Text(
                               user.userBussinessName,
-                              style: style.textTheme.headline6,
-                            ),
-                            AutoSizeText(
-                              'Mo. ${user.userNumber}',
                               style: style.textTheme.bodyLarge,
                             ),
                             AutoSizeText(
-                              user.userBussinessAddress,
-                              maxLines: 3,
+                              "Mo. ${user.userNumber} ${user.userBussinessAddress}",
+                              maxLines: 2,
                               style: style.textTheme.bodyLarge,
                             )
                           ],
@@ -166,6 +160,19 @@ class _InvoiceState extends State<Invoice> {
                       itemCount: widget.qou.cart.length,
                     ),
                   ),
+                ),
+                Container(
+                  height: 1,
+                  color: Colors.black,
+                  width: 550,
+                ),
+                Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(' कृपया फोनवर अपॉइनमेंट घेऊनच येणे.', style: style.textTheme.bodySmall!.copyWith(fontWeight: FontWeight.bold, color: Colors.black87)),
+                    Text('''
+टिप - १) ऑर्डर दिलेले फोटो /अल्बम / कॅसेट / सीडी / डीव्हीडी ३० दिवसांत घेऊन जाणे. २) ७५ टक्केरक्‍कम अँडव्हान्स द्यावी लागेल.२५ ठक्के रक्‍कम फोटो सिलेक्शन च्या वेळेस द्यावी लागेल. ३) सॉफ्ट कॉपी साठी ऑर्डर बील च्या ३५ टक्के जादा चार्ज लागेल. तसेच फोटो रेझॉल्युशन १०० ही.पी.आय. असेल ४) मेकप च्या सेवेसाठी वेगळे चार्जेस द्यावे लागतील. तसेच मेकप मटेरियलच्या उपलब्धतेनुसारच ही सेवा देण्यात येईल. ५) अचानक येणाऱ्या काही तांत्रिक अडचणींमुळे ऑर्डर पूर्ण करण्यास उशीर होऊ शकतो. ६) एकदा सिलेक्ट केलेले फोटो, अल्बम पुन्हा बदलून मिळणार नाहीत. ७) व्हीडीओ शुटींग मधील गाणी उपलब्धतेनुसारच निवडण्यात येतील, ठराविकच गाण्यासाठी आग्रही असू नये. ८) कार्यक्रम वेळेवर सुरु न झाल्यास किंवा वेळेवर न संपल्यास ओव्हर टाईम चार्जेस प्रति व्यक्ती रु.१०००/- लागतील,''', style: style.textTheme.bodySmall!.copyWith(fontSize: 10, color: Colors.black87))
+                  ],
                 ),
                 // Flexible(
                 //   child: SizedBox(
@@ -270,7 +277,7 @@ class _InvoiceState extends State<Invoice> {
                   width: 550,
                 ),
                 SizedBox(
-                  height: 80,
+                  height: 60,
                   width: 550,
                   child: Row(
                     children: [
@@ -377,19 +384,19 @@ class _InvoiceState extends State<Invoice> {
             height: 30,
             child: OutlinedButton.icon(
               onPressed: () async {
-                String? path = Directory.systemTemp.absolute.path;
-                if (path != null) {
-                  ByteData imagebyte = await WidgetToImage.repaintBoundaryToImage(
-                    _imageKey,
-                  );
-                  Uint8List imageint = imagebyte.buffer.asUint8List();
-                  Printer? printer = await Printing.pickPrinter(context: context);
-                  if (printer != null) {
-                    try {
-                      await Printing.layoutPdf(onLayout: (_) => imageint);
-                    } catch (e) {}
-                  }
-                }
+                // String? path = Directory.systemTemp.absolute.path;
+                // if (path != null) {
+                //   ByteData imagebyte = await WidgetToImage.repaintBoundaryToImage(
+                //     _imageKey,
+                //   );
+                //   Uint8List imageint = imagebyte.buffer.asUint8List();
+                //   Printer? printer = await Printing.pickPrinter(context: context);
+                //   if (printer != null) {
+                //     try {
+                //       await Printing.layoutPdf(onLayout: (_) => imageint);
+                //     } catch (e) {}
+                //   }
+                // }
               },
               icon: const Icon(MaterialIcons.print, size: 20),
               label: const Text('Print'),

@@ -9,8 +9,7 @@ class MBill extends HiveObject {
   @HiveField(1)
   String? description; // optional
   @HiveField(2)
-  List<Map<String, dynamic>>?
-      cart; // list of Map = {name,qty, peritemPrice, total price of product}
+  List<Map<String, dynamic>>? cart; // list of Map = {name,qty, peritemPrice, total price of product}
   @HiveField(3)
   int? total; // total exclusive discount
   @HiveField(4)
@@ -22,8 +21,7 @@ class MBill extends HiveObject {
   @HiveField(7)
   int? unPaid; // final - payment
   @HiveField(8)
-  List<Map<String, dynamic>>?
-      paymentHistoryOfBill; // list of map = {date,amount,mode(note)}
+  List<Map<String, dynamic>>? paymentHistoryOfBill; // list of map = {date,amount,mode(note)}
   @HiveField(9)
   int? status; // 0 = Pending, 1 = Completed, 2 = Delivered.
   @HiveField(10)
@@ -31,7 +29,7 @@ class MBill extends HiveObject {
   @HiveField(11)
   int? billindex;
   @HiveField(12)
-  String? customername; 
+  String? customername;
 
   MBill({
     this.customername,
@@ -52,29 +50,12 @@ class MBill extends HiveObject {
   @override
   bool operator ==(Object other) {
     if (identical(this, other)) return true;
-  
-    return other is MBill &&
-      other.type == type &&
-      other.description == description &&
-      other.total == total &&
-      other.discount == discount &&
-      other.finalTotal == finalTotal &&
-      other.paymentOrAdvance == paymentOrAdvance &&
-      other.unPaid == unPaid &&
-      other.status == status &&
-      other.created == created;
+
+    return other is MBill && other.type == type && other.description == description && other.total == total && other.discount == discount && other.finalTotal == finalTotal && other.paymentOrAdvance == paymentOrAdvance && other.unPaid == unPaid && other.status == status && other.created == created;
   }
 
   @override
   int get hashCode {
-    return type.hashCode ^
-      description.hashCode ^
-      total.hashCode ^
-      discount.hashCode ^
-      finalTotal.hashCode ^
-      paymentOrAdvance.hashCode ^
-      unPaid.hashCode ^
-      status.hashCode ^
-      created.hashCode;
+    return type.hashCode ^ description.hashCode ^ total.hashCode ^ discount.hashCode ^ finalTotal.hashCode ^ paymentOrAdvance.hashCode ^ unPaid.hashCode ^ status.hashCode ^ created.hashCode;
   }
 }

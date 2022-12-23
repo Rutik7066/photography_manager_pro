@@ -73,9 +73,9 @@ class QuickBill extends ChangeNotifier {
     notifyListeners();
   }
 
-  Future<bool> addbill() async{
+  Future<MBill?> addbill() async {
     if (_selectedCustomer != null && _selctedProduct != null && finalP > 0 && paid >= 0) {
-      CustomerProvider().addBill(
+      MBill? bill = CustomerProvider().addBill(
           _selectedCustomer!,
           [
             {
@@ -92,11 +92,11 @@ class QuickBill extends ChangeNotifier {
           paymentmode);
       CustomerProvider().resetCutomerList();
       notifyListeners();
-      return true;
+      return bill;
     } else if (_selectedCustomer == null && _selectedCustomerName!.isNotEmpty && _selctedProduct != null && finalP > 0 && paid >= 0) {
-       await CustomerProvider().addCustomerandBill(
+      MBill? bil = await CustomerProvider().addCustomerandBill(
           customerName: _selectedCustomerName!,
-          customerNumber: _selectedCustomerNumber!.isEmpty ? '0000000000': _selectedCustomerNumber!,
+          customerNumber: _selectedCustomerNumber!.isEmpty ? '0000000000' : _selectedCustomerNumber!,
           selectedProducts: [
             {
               'product': _selctedProduct!.productname!,
@@ -112,9 +112,8 @@ class QuickBill extends ChangeNotifier {
           paymentmode: paymentmode);
       CustomerProvider().resetCutomerList();
       notifyListeners();
-      return true;
+      return bil;
     } else if (_selectedCustomer == null && _selectedCustomerName!.isEmpty && _selctedProduct != null && finalP > 0 && paid >= 0) {
-      print('hieee');
       List events = CustomerRepo().getAllEvents();
       List bills = CustomerRepo().getallBills();
       int billnumber = events.length + bills.length;
@@ -143,12 +142,13 @@ class QuickBill extends ChangeNotifier {
           customername: '');
 
       BusinessProvider().addRow(category: 'Income', type: value, typename: 'Entry', context: _selctedProduct!.productname!, transaction: value.paymentOrAdvance!, paymentmode: paymentmode);
+      
 
       notifyListeners();
-      return true;
+      return value;
     } else {
       notifyListeners();
-      return false;
+      return null;
     }
   }
 

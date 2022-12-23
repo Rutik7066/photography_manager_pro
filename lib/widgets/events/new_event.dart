@@ -1,19 +1,9 @@
-import 'dart:developer';
-import 'dart:ffi';
-import 'dart:io';
-import 'dart:typed_data';
-import 'dart:ffi';
 
-import 'package:ffi/ffi.dart';
 import 'package:jk_photography_manager/auth/auth.dart';
 import 'package:jk_photography_manager/auth/m_user.dart';
-import 'package:jk_photography_manager/repo/whatsapptemplate.dart';
-import 'package:url_launcher/url_launcher.dart';
-import 'package:win32/win32.dart';
 
 import 'package:auto_size_text/auto_size_text.dart';
 import 'package:dropdown_button2/dropdown_button2.dart';
-import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_typeahead/flutter_typeahead.dart';
 import 'package:jk_photography_manager/common_widgets/my_textfield.dart';
@@ -21,16 +11,12 @@ import 'package:jk_photography_manager/common_widgets/new_customer.dart';
 import 'package:jk_photography_manager/common_widgets/widget_to_image/bill_to_image.dart';
 import 'package:jk_photography_manager/controller/new_event_controller.dart';
 import 'package:flutter_vector_icons/flutter_vector_icons.dart';
-import 'package:jk_photography_manager/layout/navigation.dart';
 import 'package:jk_photography_manager/model/m_customer.dart';
 import 'package:jk_photography_manager/model/m_event.dart';
 import 'package:jk_photography_manager/model/m_product.dart';
 import 'package:jk_photography_manager/provider/customer_provider.dart';
 import 'package:jk_photography_manager/provider/product_provider.dart';
 import 'package:provider/provider.dart';
-import 'package:url_launcher/url_launcher_string.dart';
-import 'package:widget_to_image/widget_to_image.dart';
-import 'package:win32/win32.dart';
 
 import '../../whatsapp_services/whatsapp_function.dart';
 
@@ -42,13 +28,13 @@ class NewEvent extends StatefulWidget {
 }
 
 class _NewEventState extends State<NewEvent> {
-  TextEditingController _productController = TextEditingController();
-  TextEditingController _customerController = TextEditingController();
-  TextEditingController _qtyController = TextEditingController();
-  TextEditingController _disController = TextEditingController();
-  TextEditingController _payController = TextEditingController();
-  TextEditingController _eventnameController = TextEditingController();
-  TextEditingController _eventdesController = TextEditingController();
+  final TextEditingController _productController = TextEditingController();
+  final TextEditingController _customerController = TextEditingController();
+  final TextEditingController _qtyController = TextEditingController();
+  final TextEditingController _disController = TextEditingController();
+  final TextEditingController _payController = TextEditingController();
+  final TextEditingController _eventnameController = TextEditingController();
+  final TextEditingController _eventdesController = TextEditingController();
 
   MCustomer? _selectedCustomer;
 
@@ -66,7 +52,7 @@ class _NewEventState extends State<NewEvent> {
 
   List<String> eventRef = ['Birthday', 'Wedding'];
 
-  GlobalKey _imageKey = GlobalKey();
+
 
   @override
   Widget build(BuildContext context) {
@@ -607,8 +593,7 @@ class _NewEventState extends State<NewEvent> {
                           neweventcontroller.reset();
                           _selectedDate = '';
                           _selectedTime = '';
-                          _selectedCustomer = null;      String message = "Dear $customer,\nThank You so much for visiting ${user.userBussinessName}.\nWe are happy to have you.";
-                          WhatsappFunction().createMessage(number: number, message: message);
+                          _selectedCustomer = null;      
                       
                         } else {
                           final bar = SnackBar(
@@ -677,8 +662,7 @@ class _NewEventState extends State<NewEvent> {
                           _selectedDate = '';
                           _selectedTime = '';
                           _selectedCustomer = null;
-                              String message = "Dear $customer,\nThank You so much for visiting ${user.userBussinessName}.\nWe are happy to have you.";
-                          WhatsappFunction().createMessage(number: number, message: message);
+                            
                         } else {
                           final bar = SnackBar(
                             behavior: SnackBarBehavior.floating,

@@ -1,5 +1,3 @@
-import 'dart:io';
-import 'dart:typed_data';
 
 import 'package:flutter/material.dart';
 import 'package:hive/hive.dart';
@@ -14,7 +12,7 @@ class Auth extends ChangeNotifier {
 // but if we get the value then check the end date is after today or not.
 // if the end date is passed then => trail ended.
 // if not => continue.....
-  final Box _user = Hive.box('knfgirn');
+  final Box _user = Hive.box('cfjfgjfjg');
 
   Widget? _route;
   Widget? get route => _route;
@@ -49,18 +47,19 @@ class Auth extends ChangeNotifier {
    notifyListeners();
   }
 
-  signin({required String email, required String password}) async {
-    final r = await _client.auth.signIn(email: email, password: password);
+  signin({required String email, required String pass}) async {
+    final r = await _client.auth.signIn(email: email, password: pass);
     if (r.error != null) {
       return 1;
     } else if (r.user != null) {
-      final image = await _client.storage.from('logo').download('${email}');
+      final image = await _client.storage.from('logo')
+      .download('rushimodellingstudio@gmail.com');
       final userData = await _client.from('user').select().eq('email', r.user!.email).execute();
       if (userData.data != null && image.data != null) {
         List l = userData.data as List;
         Map map = l.first;
+        print(map);
         map['logo'] = image.data!;
-        print(map['endDate']);
         map['endDate'] = DateFormat("yyyy-MM-dd").parse(map['endDate']);
         _user.putAll(map);
       }
@@ -68,6 +67,8 @@ class Auth extends ChangeNotifier {
       notifyListeners();
     }
   }
+
+
 
   MUser giveMetheUser() {
     return MUser.fromBox(_user);

@@ -4,19 +4,20 @@ import 'package:auto_size_text/auto_size_text.dart';
 import 'package:data_table_2/data_table_2.dart';
 import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/rendering.dart';
+
 import 'package:flutter_vector_icons/flutter_vector_icons.dart';
 import 'package:jk_photography_manager/auth/auth.dart';
 import 'package:jk_photography_manager/auth/m_user.dart';
 
 import 'dart:io';
-import 'dart:typed_data';
-import 'dart:ui';
 
 import 'package:jk_photography_manager/model/m_bill.dart';
-import 'package:printing/printing.dart';
+import 'package:path_provider/path_provider.dart';
 import 'package:provider/provider.dart';
 import 'package:widget_to_image/widget_to_image.dart';
+
+import '../../repo/whatsapptemplate.dart';
+import '../../whatsapp_api.dart';
 
 class BillToImage extends StatefulWidget {
   MBill bill;
@@ -32,9 +33,7 @@ class BillToImage extends StatefulWidget {
 
 class _BillToImageState extends State<BillToImage> {
   String ref = '';
-
-  GlobalKey _imageKey = GlobalKey();
-
+  GlobalKey imageKey = GlobalKey();
   @override
   Widget build(BuildContext context) {
     var auth = Provider.of<Auth>(context);
@@ -43,7 +42,7 @@ class _BillToImageState extends State<BillToImage> {
     String datef = '${widget.bill.created?.day}/${widget.bill.created?.month}/${widget.bill.created?.year}';
     return AlertDialog(
       content: RepaintBoundary(
-        key: _imageKey,
+        key: imageKey,
         child: Padding(
           padding: const EdgeInsets.all(8),
           child: ConstrainedBox(
@@ -156,7 +155,6 @@ class _BillToImageState extends State<BillToImage> {
                     child: SizedBox(
                       width: 550,
                       child: DataTable2(
-                      
                           horizontalMargin: 10,
                           columnSpacing: 10,
                           headingRowHeight: 30,
@@ -281,7 +279,7 @@ class _BillToImageState extends State<BillToImage> {
                                         padding: const EdgeInsets.only(left: 8, bottom: 3),
                                         child: Text('Paid:', style: style.textTheme.labelLarge),
                                       ),
-                                       Padding(
+                                      Padding(
                                         padding: const EdgeInsets.only(left: 8, bottom: 3),
                                         child: Text('Unpaid:', style: style.textTheme.labelLarge),
                                       ),
@@ -350,27 +348,14 @@ class _BillToImageState extends State<BillToImage> {
           style: style.textTheme.bodyLarge!.copyWith(color: Colors.green),
         ),
         Padding(
-          padding: const EdgeInsets.all(5.0),
+          padding: const EdgeInsets.all(5),
           child: SizedBox(
             height: 30,
-            child: OutlinedButton.icon(
-              onPressed: () async {
-                String? path = Directory.systemTemp.absolute.path;
-                if (path != null) {
-                  ByteData imagebyte = await WidgetToImage.repaintBoundaryToImage(_imageKey,);
-                  Uint8List imageint = imagebyte.buffer.asUint8List();
-                  Printer? printer = await Printing.pickPrinter(context: context);
-                  if (printer != null) {
-                    try {
-                      await Printing.layoutPdf(onLayout: (_) => imageint);
-                    } catch (e) {}
-                  }
-                }
+            child: ElevatedButton(
+              onPressed: () {
+                Navigator.pop(context);
               },
-              icon: const Icon(MaterialIcons.print, size: 20),
-              label: const Text(
-                'Print'
-              ),
+              child: const Text('Close'),
             ),
           ),
         ),
@@ -382,9 +367,9 @@ class _BillToImageState extends State<BillToImage> {
               onPressed: () async {
                 String? path = await FilePicker.platform.getDirectoryPath();
                 if (path != null) {
-                  ByteData imagebyte = await WidgetToImage.repaintBoundaryToImage(_imageKey,pixelRatio : 5);
+                  ByteData imagebyte = await WidgetToImage.repaintBoundaryToImage(imageKey, pixelRatio: 5);
                   Uint8List imageint = imagebyte.buffer.asUint8List();
-                  File image = File("${path}/${widget.bill.customername} ${widget.bill.finalTotal}.png");
+                  File image = File("$path/${widget.bill.customername} ${widget.bill.total}.png");
                   await image.writeAsBytes(imageint);
                   setState(() {
                     ref = 'Saved successfully !';
@@ -392,26 +377,70 @@ class _BillToImageState extends State<BillToImage> {
                 }
               },
               icon: const Icon(Ionicons.download_outline, size: 20),
-              label: const Text(
-                'Download'
-              ),
+              label: const Text('Download'),
             ),
           ),
         ),
-        Padding(
-          padding: const EdgeInsets.all(5),
+         Padding(
+          padding: const EdgeInsets.all(5.0),
           child: SizedBox(
             height: 30,
-            child: ElevatedButton(
-              onPressed: () {
-                Navigator.pop(context);
+            child: OutlinedButton.icon(
+              onPressed: () async {
+                final tempDir = await getTemporaryDirectory();
+                String path = '${tempDir.path}/temp.png';
+                print(path);
+                ByteData imagebyte = await WidgetToImage.repaintBoundaryToImage(imageKey, pixelRatio: 5);
+                Uint8List imageint = imagebyte.buffer.asUint8List();
+                File image = File(path);
+                image.writeAsBytes(imageint).whenComplete(() {
+                  String msg = WhatsAppTemplate().retriveMsg('') ?? '';
+                  WhatsappApi().sendBill(msg: msg, number: '721965611' ?? '', path: path, fileName: path).then((value) {
+                    if (value != 'error') {
+                      final bar = SnackBar(
+                        behavior: SnackBarBehavior.floating,
+                        width: MediaQuery.of(context).size.height - 40,
+                        backgroundColor: Colors.green,
+                        duration: const Duration(seconds: 5),
+                        content: Text(
+                          'Message Sent',
+                          style: TextStyle(
+                            color: Colors.white,
+                            fontSize: style.textTheme.bodyLarge!.fontSize ?? 14,
+                            fontWeight: style.textTheme.bodyLarge!.fontWeight,
+                          ),
+                        ),
+                        action: SnackBarAction(label: 'Ok', textColor: Colors.white, onPressed: () {}),
+                      );
+                      ScaffoldMessenger.of(context).showSnackBar(bar);
+                    } else {
+                      final bar = SnackBar(
+                        behavior: SnackBarBehavior.floating,
+                        width: MediaQuery.of(context).size.height - 40,
+                        backgroundColor: style.errorColor,
+                        duration: const Duration(seconds: 5),
+                        content: Text(
+                          'value.error.toString()',
+                          style: TextStyle(
+                            color: Colors.white,
+                            fontSize: style.textTheme.bodyLarge!.fontSize ?? 14,
+                            fontWeight: style.textTheme.bodyLarge!.fontWeight,
+                          ),
+                        ),
+                        action: SnackBarAction(label: 'Ok', textColor: Colors.white, onPressed: () {}),
+                      );
+                      ScaffoldMessenger.of(context).showSnackBar(bar);
+                    }
+                    Navigator.pop(context);
+                  });
+                });
               },
-              child: const Text(
-                'Close'
-              ),
+              icon: const Icon(FontAwesome.send, size: 13),
+              label: const Text('Send'),
             ),
           ),
         ),
+        
       ],
     );
   }

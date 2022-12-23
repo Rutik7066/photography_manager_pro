@@ -7,7 +7,7 @@ class QuotationRepo {
   addQuotation({required String name, required String number, required List cart, required int discount}) async {
     int total = 0;
     for (var i in cart) {
-      total = total + i['price'] as int;
+      total = total + i['totalprice'] as int;
     }
     int index = await box.add({
       'name': name,

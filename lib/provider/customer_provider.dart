@@ -54,7 +54,7 @@ class CustomerProvider extends ChangeNotifier {
   }
 
   ////////////////////////////////////////////////////////////////////////////
-  Future addCustomerandBill(
+  Future<MBill?> addCustomerandBill(
       {required String customerName,
       required String customerNumber,
       required List<Map<String, dynamic>> selectedProducts,

@@ -1,3 +1,5 @@
+import 'dart:io';
+import 'dart:typed_data';
 
 import 'package:auto_size_text/auto_size_text.dart';
 import 'package:data_table_2/data_table_2.dart';
@@ -5,6 +7,9 @@ import 'package:dropdown_button2/dropdown_button2.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_typeahead/flutter_typeahead.dart';
 import 'package:flutter_vector_icons/flutter_vector_icons.dart';
+import 'package:jk_photography_manager/repo/whatsapptemplate.dart';
+import 'package:jk_photography_manager/whatsapp_api.dart';
+import 'package:path_provider/path_provider.dart';
 import 'package:provider/provider.dart';
 import 'package:jk_photography_manager/auth/auth.dart';
 import 'package:jk_photography_manager/auth/m_user.dart';
@@ -18,6 +23,7 @@ import 'package:jk_photography_manager/model/m_product.dart';
 import 'package:jk_photography_manager/provider/business_provider.dart';
 import 'package:jk_photography_manager/provider/customer_provider.dart';
 import 'package:jk_photography_manager/provider/product_provider.dart';
+import 'package:widget_to_image/widget_to_image.dart';
 
 import '../../whatsapp_services/whatsapp_function.dart';
 
@@ -366,9 +372,6 @@ class _NewBillState extends State<NewBill> {
                         _qtyController.clear();
                         _disController.clear();
                         _payController.clear();
-
-                        String message = "Welcome To ${user.userBussinessName}, We are happy to have you";
-                        WhatsappFunction().createMessage(number: number, message: message);
                       } else {
                         final bar = SnackBar(
                           behavior: SnackBarBehavior.floating,
@@ -418,8 +421,7 @@ class _NewBillState extends State<NewBill> {
                           payment,
                           _dropdowninitvalue,
                         );
-                        String number = _selectedCustomer!.number!;
-                                    String customer = _selectedCustomer!.name!;
+                  
                         customerprovider.getAllBills();
                         regularbillcontroller.clear();
                         _productController.clear();
@@ -427,8 +429,6 @@ class _NewBillState extends State<NewBill> {
                         _qtyController.clear();
                         _disController.clear();
                         _payController.clear();
-                        String message ="Dear $customer,\nThank You so much for visiting ${user.userBussinessName}.\nWe are happy to have you.";
-                        WhatsappFunction().createMessage(number: number, message: message);
                       } else {
                         final bar = SnackBar(
                           behavior: SnackBarBehavior.floating,
@@ -458,63 +458,6 @@ class _NewBillState extends State<NewBill> {
                   ),
                 ),
               ),
-              // Padding(
-              //   padding: const EdgeInsets.all(5),
-              //   child: SizedBox(
-              //     height: 30,
-              //     child: OutlinedButton.icon(
-              //         onPressed: () async {
-              //           if (_selectedCustomer != null && regularbillcontroller.totalPriceOfCart > 0) {
-              //             int intdisc = int.tryParse(_disController.text) ?? 0;
-              //             int total = regularbillcontroller.totalPriceOfCart;
-              //             int finalprice = total - intdisc;
-              //             int payment = int.tryParse(_payController.text) ?? 0;
-              //             customerprovider.addBill(
-              //               _selectedCustomer!,
-              //               regularbillcontroller.selectedProducts,
-              //               regularbillcontroller.totalPriceOfCart,
-              //               intdisc,
-              //               finalprice,
-              //               payment,
-              //               _dropdowninitvalue,
-              //             );
-              //             customerprovider.getAllBills();
-              //             regularbillcontroller.clear();
-              //             _productController.clear();
-              //             _customerController.clear();
-              //             _qtyController.clear();
-              //             _disController.clear();
-              //             _payController.clear();
-              //             var msg = 'Dear ${_selectedCustomer!.name},\nThank You so much for visiting ${user.userBussinessName}.\nWe are happy to have you.';
-              //             var number = _selectedCustomer!.number;
-              //             Uri? link = Uri.tryParse('https://web.whatsapp.com/send/?phone=91$number&text=${WhatsAppTemplate().retriveMsg('welcomenote') ?? '$msg🙂'}&type=phone_number&app_absent=0');
-              //             launchUrl(link!);
-              //           } else {
-              //             final bar = SnackBar(
-              //               behavior: SnackBarBehavior.floating,
-              //               width: MediaQuery.of(context).size.height - 40,
-              //               backgroundColor: style.errorColor,
-              //               duration: const Duration(seconds: 5),
-              //               content: Text(
-              //                 'Something went wrong. Kindly fill all information correctly',
-              //                 style: TextStyle(
-              //                   color: Colors.white,
-              //                   fontSize: style.textTheme.bodyLarge!.fontSize ?? 14,
-              //                   fontWeight: style.textTheme.bodyLarge!.fontWeight,
-              //                 ),
-              //               ),
-              //               action: SnackBarAction(label: 'Ok', textColor: Colors.white, onPressed: () {}),
-              //             );
-              //             ScaffoldMessenger.of(context).showSnackBar(bar);
-              //           }
-              //         },
-              //         icon: Icon(
-              //           FontAwesome.send,
-              //           size: 13,
-              //         ),
-              //         label: Text('Notify')),
-              //   ),
-              // ),
             ],
           ),
         ),

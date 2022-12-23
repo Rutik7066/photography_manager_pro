@@ -5,11 +5,11 @@ import 'package:hive_flutter/hive_flutter.dart';
 class WhatsAppTemplate {
   Box _msgtemp = Hive.box('msgtemp');
 
-  addMsg(String msg, String title) {
-    _msgtemp.put(title, msg);
+  Future<void> addMsg(String title, String msg) {
+    return _msgtemp.put('template', msg);
   }
-  
+
   String? retriveMsg(String title) {
-    return _msgtemp.get(title);
+    return _msgtemp.get('template');
   }
 }

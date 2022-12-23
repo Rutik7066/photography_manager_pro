@@ -2,6 +2,7 @@ import 'package:auto_size_text/auto_size_text.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_typeahead/flutter_typeahead.dart';
 import 'package:jk_photography_manager/common_widgets/my_textfield.dart';
+import 'package:jk_photography_manager/common_widgets/widget_to_image/quotation_to_image.dart';
 import 'package:jk_photography_manager/model/m_quotation.dart';
 import 'package:jk_photography_manager/page/whatsapp.dart';
 import 'package:jk_photography_manager/repo/quotation_repo.dart';
@@ -118,6 +119,8 @@ class _NewQuotationState extends State<NewQuotation> {
                       onPressed: () {
                         if (_productController.text.isNotEmpty && selectedProduct != null) {
                           int quantity = int.tryParse(_qtyController.text) ?? 1;
+                          print('Qty : ${quantity * selectedProduct!.price!}');
+                          print('Qty : $quantity');
                           setState(() {
                             cart.add({
                               'product': selectedProduct!.productname,
@@ -306,6 +309,7 @@ class _NewQuotationState extends State<NewQuotation> {
                       onPressed: () async {
                         if (_customerController.text.isNotEmpty && cart.isNotEmpty && _numberC.text.isNotEmpty) {
                           int discount = int.tryParse(_disController.text) ?? 0;
+                          print(cart);
                           var quotationMap = await QuotationRepo().addQuotation(
                             name: _customerController.text,
                             number: _numberC.text,
@@ -313,12 +317,11 @@ class _NewQuotationState extends State<NewQuotation> {
                             discount: discount,
                           );
                           MQuotation quotation = MQuotation.fromMap(quotationMap);
-                          String message = "Dear ${_customerController.text},\nThank You so much for visiting ${user.userBussinessName}.\nWe are happy to have you.";
                           await showDialog(
                               context: context,
                               builder: (context) {
-                                return Invoice(qou: quotation);
-                              }).whenComplete(() async => await WhatsappFunction().createMessage(number: _numberC.text, message: message));
+                                return QuotationToImage(qou: quotation);
+                              });
                         }
                       },
                       child: const Text('Save & Show'),
